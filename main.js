@@ -19,7 +19,47 @@ function createWindow() {
   win.loadFile("index.html");
 }
 
-app.whenReady().then(createWindow);
+// app.whenReady().then(createWindow);
+
+app.whenReady().then(() => {
+    createWindow();
+    // 检查更新并提示用户
+    autoUpdater.checkForUpdatesAndNotify();
+  
+    // 当有更新可用时触发
+    autoUpdater.on("update-available", () => {
+      // 提示用户有新版本可用，并询问是否要立即更新
+      dialog
+        .showMessageBox({
+          type: "info",
+          title: "更新提示",
+          message: "有新版本可用，是否立即更新？",
+          buttons: ["是", "否"],
+        })
+        .then((response) => {
+          if (response.response === 0) {
+            // 如果用户选择立即更新，则开始下载并安装新版本
+            autoUpdater.downloadUpdate();
+          }
+        });
+    });
+  
+    // 当更新下载完成时触发
+    autoUpdater.on("update-downloaded", () => {
+      // 提示用户更新已完成，并要求重新启动应用程序
+      dialog
+        .showMessageBox({
+          type: "info",
+          title: "更新完成",
+          message: "更新已完成，重启应用程序以应用更新。",
+          buttons: ["确定"],
+        })
+        .then(() => {
+          app.quit(); // 退出应用程序以应用更新
+        });
+    });
+  });
+  
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -43,41 +83,41 @@ autoUpdater.setFeedURL({
 
 
 
-// 当应用程序准备就绪时
-app.on("ready", () => {
+// // 当应用程序准备就绪时
+// app.on("ready", () => {
 
-  autoUpdater.checkForUpdatesAndNotify();
+//   autoUpdater.checkForUpdatesAndNotify();
 
-  // 当有更新可用时触发
-  autoUpdater.on("update-available", () => {
-    // 提示用户有新版本可用，并询问是否要立即更新
-    dialog
-      .showMessageBox({
-        type: "info",
-        title: "更新提示",
-        message: "有新版本可用，是否立即更新？",
-        buttons: ["是", "否"],
-      })
-      .then((response) => {
-        if (response.response === 0) {
-          // 如果用户选择立即更新，则开始下载并安装新版本
-          autoUpdater.downloadUpdate();
-        }
-      });
-  });
+//   // 当有更新可用时触发
+//   autoUpdater.on("update-available", () => {
+//     // 提示用户有新版本可用，并询问是否要立即更新
+//     dialog
+//       .showMessageBox({
+//         type: "info",
+//         title: "更新提示",
+//         message: "有新版本可用，是否立即更新？",
+//         buttons: ["是", "否"],
+//       })
+//       .then((response) => {
+//         if (response.response === 0) {
+//           // 如果用户选择立即更新，则开始下载并安装新版本
+//           autoUpdater.downloadUpdate();
+//         }
+//       });
+//   });
 
-  // 当更新下载完成时触发
-  autoUpdater.on("update-downloaded", () => {
-    // 提示用户更新已完成，并要求重新启动应用程序
-    dialog
-      .showMessageBox({
-        type: "info",
-        title: "更新完成",
-        message: "更新已完成，重启应用程序以应用更新。",
-        buttons: ["确定"],
-      })
-      .then(() => {
-        app.quit(); // 退出应用程序以应用更新
-      });
-  });
-});
+//   // 当更新下载完成时触发
+//   autoUpdater.on("update-downloaded", () => {
+//     // 提示用户更新已完成，并要求重新启动应用程序
+//     dialog
+//       .showMessageBox({
+//         type: "info",
+//         title: "更新完成",
+//         message: "更新已完成，重启应用程序以应用更新。",
+//         buttons: ["确定"],
+//       })
+//       .then(() => {
+//         app.quit(); // 退出应用程序以应用更新
+//       });
+//   });
+// });
