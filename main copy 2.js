@@ -41,10 +41,38 @@ autoUpdater.setFeedURL({
   url: "https://github.com/eriksun0310/electron-app",
 });
 
+//當更新可用時
+autoUpdater.on("update-available", () => {
+  log.info("Update available.");
+});
 
+//當更新已下載完成時
+autoUpdater.on("update-downloaded", () => {
+  log.info("Update downloaded; will install now");
+  autoUpdater.quitAndInstall();
+});
+
+//在應用程式啟動時, 設置每3分鐘檢查一次, 是否要更新
+// app.on("ready", () => {
+//   setInterval(() => {
+//     autoUpdater.checkForUpdatesAndNotify();
+//   }, 3 * 60 * 1000);
+// });
+
+// 定时执行自动更新检查的间隔（以毫秒为单位）
+// const updateCheckInterval = 10 * 60 * 1000; // 每隔 10 分钟检查一次更新
+
+// 执行自动更新检查
+// function checkForUpdates() {
+//   autoUpdater.checkForUpdatesAndNotify();
+// }
 
 // 当应用程序准备就绪时
 app.on("ready", () => {
+//   checkForUpdates();
+  // 每隔一定时间执行一次自动更新检查
+//   setInterval(checkForUpdates, updateCheckInterval);
+
 
   autoUpdater.checkForUpdatesAndNotify();
 
