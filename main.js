@@ -1,6 +1,35 @@
 const { app, BrowserWindow, dialog } = require("electron");
 const { autoUpdater } = require("electron-updater");
+const path = require('path');
+const fs = require('fs');
+const feed = "your_site/update/windows_64";
 const log = require("electron-log");
+
+
+/*
+ 為了要讓node-module 生成 app-update.yml、 dev-app-update.yml, 否則會報錯()
+ no such file or directory, open 'C:\Users\USER\Desktop\electron-app\node_modules\electron\dist\resources\app-update.yml'
+*/
+let yaml = "";
+
+yaml += "provider: generic\n";
+yaml += "url: your_site/update/windows_64\n";
+yaml += "useMultipleRangeRequest: false\n";
+yaml += "channel: latest\n";
+yaml += "updaterCacheDirName: " + app.getName();
+
+let update_file = [path.join(process.resourcesPath, "app-update.yml"), yaml];
+let dev_update_file = [
+  path.join(process.resourcesPath, "dev-app-update.yml"),
+  yaml,
+];
+let chechFiles = [update_file, dev_update_file];
+
+for (let file of chechFiles) {
+  if (!fs.existsSync(file[0])) {
+    fs.writeFileSync(file[0], file[1], () => {});
+  }
+}
 
 log.transports.file.level = "info";
 autoUpdater.logger = log;
@@ -31,23 +60,24 @@ app.on("activate", () => {
   }
 });
 
-Object.defineProperty(app, 'isPackaged', {
+Object.defineProperty(app, "isPackaged", {
   get() {
     return true;
-  }
+  },
 });
 
 autoUpdater.setFeedURL({
   provider: "github",
-  owner: 'eriksun0310',
+  owner: "eriksun0310",
   repo: "electron-app",
   releaseType: "release",
   url: "https://github.com/eriksun0310/electron-app/releases/latest",
 });
 
+// 每1分鐘檢查一次是否要更新
 app.on("ready", () => {
   setInterval(() => {
-    console.log(1111111)
+    console.log(1111111);
     autoUpdater.checkForUpdates();
   }, 60000);
 });
