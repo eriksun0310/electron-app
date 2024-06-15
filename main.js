@@ -31,6 +31,7 @@ for (let file of chechFiles) {
   }
 }
 
+
 log.transports.file.level = "info";
 autoUpdater.logger = log;
 
@@ -77,7 +78,7 @@ autoUpdater.setFeedURL({
 // 每1分鐘檢查一次是否要更新
 app.on("ready", () => {
   setInterval(() => {
-    console.log(1111111);
+
     autoUpdater.checkForUpdates();
   }, 60000);
 });
@@ -93,6 +94,7 @@ autoUpdater.on("update-available", () => {
       buttons: ["是", "否"],
     })
     .then((response) => {
+
       if (response.response === 0) {
         // 如果用户选择立即更新，则开始下载并安装新版本
         autoUpdater.downloadUpdate();
@@ -102,6 +104,7 @@ autoUpdater.on("update-available", () => {
 
 // 当更新下载完成时触发
 autoUpdater.on("update-downloaded", () => {
+
   // 提示用户更新已完成，并要求重新启动应用程序
   dialog
     .showMessageBox({
@@ -111,7 +114,7 @@ autoUpdater.on("update-downloaded", () => {
       buttons: ["确定"],
     })
     .then(() => {
-      app.quit(); // 退出应用程序以应用更新
+      autoUpdater.quitAndInstall(); // 退出应用程序以应用更新
     });
 });
 autoUpdater.on("error", (error) => {
