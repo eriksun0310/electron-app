@@ -78,9 +78,8 @@ autoUpdater.setFeedURL({
 // 每1分鐘檢查一次是否要更新
 app.on("ready", () => {
   setInterval(() => {
-
     autoUpdater.checkForUpdates();
-  }, 60000);
+  }, 1000);
 });
 
 // 当有更新可用时触发
