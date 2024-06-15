@@ -1,10 +1,9 @@
 const { app, BrowserWindow, dialog } = require("electron");
 const { autoUpdater } = require("electron-updater");
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 const feed = "your_site/update/windows_64";
 const log = require("electron-log");
-
 
 /*
  為了要讓node-module 生成 app-update.yml、 dev-app-update.yml, 否則會報錯()
@@ -30,7 +29,6 @@ for (let file of chechFiles) {
     fs.writeFileSync(file[0], file[1], () => {});
   }
 }
-
 
 log.transports.file.level = "info";
 autoUpdater.logger = log;
@@ -77,14 +75,16 @@ autoUpdater.setFeedURL({
 
 // 每1分鐘檢查一次是否要更新
 app.on("ready", () => {
-  setInterval(() => {
-    autoUpdater.checkForUpdates();
-  }, 1000);
+  autoUpdater.checkForUpdates();
+
+  // setInterval(() => {
+  //   autoUpdater.checkForUpdates();
+  // }, 60000);
 });
 
-// 当有更新可用时触发
+// 當有更新可用時觸發
 autoUpdater.on("update-available", () => {
-  // 提示用户有新版本可用，并询问是否要立即更新
+  //提示使用者有新版本可用，並詢問是否要立即更新
   dialog
     .showMessageBox({
       type: "info",
@@ -93,23 +93,21 @@ autoUpdater.on("update-available", () => {
       buttons: ["是", "否"],
     })
     .then((response) => {
-
       if (response.response === 0) {
-        // 如果用户选择立即更新，则开始下载并安装新版本
+        // 如果使用者選擇立即更新，則開始下載並安裝新版本
         autoUpdater.downloadUpdate();
       }
     });
 });
 
-// 当更新下载完成时触发
+// 當更新下載完成時觸發
 autoUpdater.on("update-downloaded", () => {
-
-  // 提示用户更新已完成，并要求重新启动应用程序
+  //提示用戶下載已完成，並要求重新啟動應用程式
   dialog
     .showMessageBox({
       type: "info",
-      title: "更新完成",
-      message: "更新已完成，重启应用程序以应用更新。",
+      title: "下載完成",
+      message: "下載已完成，重啟應用程式以應用更新。",
       buttons: ["确定"],
     })
     .then(() => {
