@@ -1,5 +1,11 @@
 # 推上新版本 的流程
 
+
+### npm
+1. npm install electron-builder --save-dev
+2. npm install electron-updater
+
+
 ### 下指令 (要用cmd、powerShell 系統管理員身分執行)
 
 1. 更改想更新的檔案 index.html 新增了 v1.0.8 才有的功能
@@ -23,14 +29,19 @@
 13. npm run build 这样做会生成一个低版本号(1.0.7) 的应用程序
 14. npm install (看有沒有依賴項要安裝)
 15. npm start (開啟electron)
-16. 過大概1分鐘左右(第一次會比較久), 會跳出是否要更新彈窗,按下 '是' 就會有問題1出現了....
+16. 過大概1分鐘左右(第一次會比較久), 會跳出是否要更新彈窗,按下 '是'
+
+
+
+>避免暴露source code 到 release  上, 所以要把安裝包放在另外一個server上(測試方式)
+1. 加 root 資料夾
+2. npm run build (將生成的dist 的檔案: 5個), 移到root 資料夾
+3. npm run http (開啟本地伺服器)
+4. npm run start (找到 需要 更新的安裝包, 就會從"http://127.0.0.1:8080/"取得, 最新的安裝包,並下載)
 
 
 
 
-> 還沒解決的問題
-1. npm run start 後 按下'是'更新, 關閉electron 後會自己下載完之後,再自動開啟 electron 時, 就會報錯 以及 開啟dist 中的 electron-app Setup 1.0.8 安裝檔 也會報錯
-https://github.com/electron-userland/electron-builder/issues/8220
 
 
 
@@ -38,3 +49,6 @@ https://github.com/electron-userland/electron-builder/issues/8220
 1. 無法生成 electron-app Setup 1.0.8 安裝檔
 2. 目前 npm start 會報錯 
 Error: Cannot download "https://github.com/eriksun0310/electron-app/releases/download/v1.0.7/electron-app-Setup-1.0.7.exe", status 404:
+3. npm run start 後 按下'是'更新, 關閉electron 後會自己下載完之後,再自動開啟 electron 時, 就會報錯 以及 開啟dist 中的 electron-app Setup 1.0.8 安裝檔 也會報錯
+https://github.com/electron-userland/electron-builder/issues/8220
+4.  no such file or directory, open 'C:\Users\USER\Desktop\electron-app\node_modules\electron\dist\resources\app-update.yml'

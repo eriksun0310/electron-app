@@ -6,7 +6,7 @@ const feed = "your_site/update/windows_64";
 const log = require("electron-log");
 
 /*
- 為了要讓node-module 生成 app-update.yml、 dev-app-update.yml, 否則會報錯()
+ 為了要讓node-module > electron > dist > resources 生成 app-update.yml、 dev-app-update.yml, 否則會報錯()
  no such file or directory, open 'C:\Users\USER\Desktop\electron-app\node_modules\electron\dist\resources\app-update.yml'
 */
 let yaml = "";
@@ -34,15 +34,31 @@ log.transports.file.level = "info";
 autoUpdater.logger = log;
 
 function createWindow() {
-  const win = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false,
     webPreferences: {
       nodeIntegration: true,
     },
   });
 
-  win.loadFile("index.html");
+  mainWindow.loadFile("index.html");
+  var splash = new BrowserWindow({
+    width: 500,
+    height: 300,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
+  });
+
+  splash.loadFile("splash.html");
+  splash.center();
+  setTimeout(function () {
+    splash.close();
+    mainWindow.center();
+    mainWindow.show();
+  }, 5000);
 }
 
 app.whenReady().then(createWindow);
@@ -65,12 +81,17 @@ Object.defineProperty(app, "isPackaged", {
   },
 });
 
+// autoUpdater.setFeedURL({
+//   provider: "github",
+//   owner: "eriksun0310",
+//   repo: "electron-app",
+//   releaseType: "release",
+//   url: "https://github.com/eriksun0310/electron-app/releases/latest",
+// });
+
 autoUpdater.setFeedURL({
-  provider: "github",
-  owner: "eriksun0310",
-  repo: "electron-app",
-  releaseType: "release",
-  url: "https://github.com/eriksun0310/electron-app/releases/latest",
+  provider: "generic",
+  url: "http://127.0.0.1:8080/",
 });
 
 // 每1分鐘檢查一次是否要更新
