@@ -34,7 +34,7 @@
       }
 ]
 ```
->extraFiles vs extraResources 的差別
+### extraFiles vs extraResources 的差別
 * electron 下載後的本地路徑: C:\Users\USER\AppData\Local\Programs\electron-app
 * extraFiles:  a.exe檔 會跟 electron-app.exe 在同一層
 * extraResources:  a.exe檔 會放在 resources資料夾 裡面
